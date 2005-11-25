@@ -3,6 +3,8 @@
 #include "pop3.h"
 #include "auth_functions.h"
 
+char _default_auth_need_root() {return 0;}
+
 #ifdef USE_OPENSSL
 
 #include <openssl/rand.h>

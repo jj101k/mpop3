@@ -1,4 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+sysconfdir=@sysconfdir@
+libdir=@libdir@/@PACKAGE_NAME@
+sbindir=@sbindir@
+
 SHARED_EXT=@SHARED_EXT@
 LIBS=@LIBS@
-DEFINES=@DEFS@
+DEFINES=@DEFS@ -DSYSCONFDIR=\"$(sysconfdir)\"
 CC=@CC@ -Wall
+INSTALL=@INSTALL@
+INSTALL_DATA=@INSTALL_DATA@
+INSTALL_PROGRAM=@INSTALL_PROGRAM@ -m 700

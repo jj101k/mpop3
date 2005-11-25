@@ -76,4 +76,17 @@ int _pop3_fprintf(FILE *out, char const *format, ...);
  *
  */
 int hex_from_binary(char *outstring, char const *instring, unsigned long bytes);
+
+/*
+ * drop_privs_to_user(char const *username)
+ *
+ * Tries to SU to the given user. Returns 1 on success, 0 on failure.
+ *
+ * drop_privs()
+ *
+ * SUs to the default 'safe' user, or exits.
+ *
+ */
+char drop_privs_to_user(char const *);
+void drop_privs();
 #endif

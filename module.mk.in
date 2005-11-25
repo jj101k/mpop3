@@ -5,7 +5,7 @@ OTHER_OBJECTS=../util.o
 BUILD=gcc @MAKE_SHARED@
 #BUILD=libtool -dynamic
 
-.PHONY: all clean
+.PHONY: all clean install
 
 all: $(TARGET)
 
@@ -17,3 +17,6 @@ clean:
 
 .c.o:
 	$(CC) -I.. $(DEFINES) -c $<
+
+install: $(TARGET)
+	$(INSTALL) $(TARGET) $(libdir)

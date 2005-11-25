@@ -9,6 +9,7 @@ char const *(*_auth_password)(char const *);
 char const *(*_auth_login)(char const *);
 int (*_auth_login_delay_needed)(char const *);
 int (*_auth_default_login_delay)();
+char (*_auth_need_root)() ;
 
 #define LOAD_MISC_FUNC(fname, qname) {if(dlhandle) fname=dlsym(dlhandle, qname); else if(!fname) {fname=_default##fname;}}
 
@@ -19,6 +20,7 @@ int auth_hookup(void *dlhandle) {
 	LOAD_MISC_FUNC(_auth_login, "_auth_login");
 	LOAD_MISC_FUNC(_auth_login_delay_needed, "_auth_login_delay_needed");
 	LOAD_MISC_FUNC(_auth_default_login_delay, "_auth_default_login_delay");
+	LOAD_MISC_FUNC(_auth_need_root, "_auth_need_root");
 	return 1;
 }
 
@@ -34,6 +36,7 @@ int (*_storage_dump_message_lines)(struct pop3_message *, unsigned long int, FIL
 int (*_storage_dump_headers)(struct pop3_message *, FILE *);
 int (*_storage_synch)();
 int (*_storage_dump_fragment)(unsigned long int, unsigned long int, unsigned long int, unsigned long int, FILE *);
+enum whichUser (*_storage_need_user)() ;
 
 int storage_hookup(void *dlhandle) {
 	LOAD_MISC_FUNC(_storage_array_style, "_storage_array_style");
@@ -48,5 +51,6 @@ int storage_hookup(void *dlhandle) {
 	LOAD_MISC_FUNC(_storage_dump_headers, "_storage_dump_headers");
 	LOAD_MISC_FUNC(_storage_synch, "_storage_synch");
 	LOAD_MISC_FUNC(_storage_dump_fragment, "_storage_dump_fragment");
+	LOAD_MISC_FUNC(_storage_need_user, "_storage_need_user");
 	return 1;
 }

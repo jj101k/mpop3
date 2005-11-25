@@ -1,4 +1,4 @@
-AC_INIT(mpop3, 0.11)
+AC_INIT(mpop3, 0.12)
 AC_SUBST(SAFE_USER, "mail")
 AC_ARG_WITH(safe-user,
 	[	--with-safe-user=foo	SU to this user if you're root	],
@@ -40,5 +40,6 @@ AC_CHECK_FILE(/usr/lib/libc.dylib, [
 AC_CHECK_HEADERS([dns_sd.h], [], [AC_DEFINE(USE_RENDEZVOUS,0)])
 AC_PROG_LEX
 AC_PROG_CC
+AC_PROG_INSTALL
 AC_CONFIG_FILES([Makefile defaults.mk module.mk config.h])
 AC_OUTPUT

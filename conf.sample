@@ -1,2 +1,3 @@
-auth_module auth_file/auth_file$SHARED_EXT
-storage_module storage_mbox/storage_mbox$SHARED_EXT
+# Don't mix multiple auth modules or multiple storage modules unless you're sure what will happen.
+auth_module $libdir/auth_getpw/auth_getpw$SHARED_EXT
+storage_module $libdir/storage_mbox/storage_mbox$SHARED_EXT

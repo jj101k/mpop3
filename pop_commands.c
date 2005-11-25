@@ -4,7 +4,6 @@
 #include "pop3.h"
 #include "auth_functions.h"
 
-#include "config.h"
 
 #define ABSOLUTE_MAX_USERNAME_LENGTH 1024
 
@@ -12,22 +11,6 @@
 #ifdef USE_OPENSSL
 #include <openssl/evp.h>
 #endif
-
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <pwd.h>
-void drop_privs() {
-	if(!getuid()) {
-		struct passwd *pswd=getpwnam(SAFE_USER);
-		if(!pswd) {
-			perror("Failed to drop privs, aborting");
-			exit(1);
-		}
-		setgid(pswd->pw_gid);
-		setuid(pswd->pw_uid);
-	}
-}
 
 struct pop3_command_rv
 	pop3_rv_misc_success={1, 0, NULL, NULL}, pop3_rv_misc_failure={0, 0, NULL, NULL},
@@ -155,7 +138,11 @@ struct pop3_command_rv pop3_USERPASS(int argc, char *argv[], enum pop3_state *cu
 			if(_auth_login_delay_needed(username)) {
 				return pop3_rv_edelay; // delayed
 			} else if(_storage_lock_mailbox(mailbox)) {
-				drop_privs();
+				if(_storage_need_user()==wuMailbox) {
+					if(!drop_privs_to_user(mailbox)) drop_privs();
+				} else {
+					drop_privs();
+				}
 				*current_state=p3Transaction;
 				return pop3_rv_login_success;
 			} else {
@@ -196,7 +183,11 @@ struct pop3_command_rv pop3_APOP(int argc, char *argv[], enum pop3_state *curren
 		} else if(_auth_login_delay_needed(username)) {
 			return pop3_rv_edelay; // delayed
 		} else if(_storage_lock_mailbox(mailbox)) {
-			drop_privs();
+			if(_storage_need_user()==wuMailbox) {
+				if(!drop_privs_to_user(mailbox)) drop_privs();
+			} else {
+				drop_privs();
+			}
 			*current_state=p3Transaction;
 			return pop3_rv_login_success;
 		} else {

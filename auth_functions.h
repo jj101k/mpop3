@@ -30,3 +30,10 @@ extern char const *(*_auth_login)(char const *);
  */
 extern int (*_auth_login_delay_needed)(char const *);
 extern int (*_auth_default_login_delay)();
+
+/*
+ * char _auth_need_root()
+ *
+ * Need root privs to successfully authenticate people? Then return 1 from this.
+ */
+extern char (*_auth_need_root)() ;

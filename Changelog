@@ -24,3 +24,13 @@
 - Used a slightly more sensible approach to the defaults.
 - Set sensible default storage_mbox root
 - Added very simple priv-drop support
+
+012:
+- Privilege revocation at earliest convenience (using _auth_need_root() and _storage_need_user())
+- Added more documentation
+- Switched to getopt()
+- Added config-file (-f) option
+- Added help (-h) option
+- Added 'install' target
+- Switched to auth_getpw instead of auth_file in default config
+- Removed '-C' from make command line (BSD compat)

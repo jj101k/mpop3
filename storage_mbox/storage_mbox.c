@@ -14,6 +14,9 @@ int spoolfd;
 FILE *spoolfp;
 char const *g_mailboxname;
 
+// This is appropriate for system (different user) mailboxes; otherwise, return wuAny.
+enum whichUser _storage_need_user() {return wuMailbox;}
+
 #ifndef USE_OPENSSL
 #define USE_OPENSSL 0
 #endif

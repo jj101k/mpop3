@@ -3,33 +3,17 @@ MPOP3 - a modular POP3 server
 
 This program is a modular POP3 implementation, meaning that it supports different authentication/storage modules loadable at runtime. At the moment, I only have three, and the default config file (mpop3.conf) loads two of them by default: auth_file and storage_mbox.
 
+PRIVILEGE DROPPING
+
+If you see fit to start the program as root, it will switch users:
+- If _storage_need_user() returns other than wuAny, after auth/lock, switch to the "safe" user (wuDefault) or the user with the same name as the mailbox (wuMailbox)
+- If _auth_need_root() is set, after auth/lock, switch to the "safe" user
+- If not running in stdin (-s) mode [ie, if binding a TCP port], after bind(), switch to the "safe" user
+- Otherwise, switch to the "safe" user immediately. 
+
 AUTH MODULES
 
-The auth modules handle username/password lookups and also username->mailboxname mappings. The functions you can override are:
-
-	char const *_auth_attempt_login(char const *username, char const *password);
-
-If the username and password (as supplied by USER & PASS) are correct, this should return the mailboxname. You don't need to override this if you've provided a functional _auth_password() below.
-
-	char const *_auth_timestamp()
-
-Returns an APOP timestamp. You should override this to return NULL if you can't support APOP, otherwise you can leave it.
-
-	char const *_auth_password(char const *username)
-
-This should return the actual user's password, mainly for comparison using APOP. You should override this function if you have actual passwords stored; otherwise, you should override _auth_attempt_login() above.
-
-	char const *_auth_login(char const *username)
-
-This actually just maps a username to a mailbox, but in most senses if this is being called then the user has successfully logged in, and so is suitable for flagging someone as logged in, if you feel inclined to do so.
-
-	int _auth_default_login_delay()
-
-This allows you to advertise a default login delay, via CAPA. If you return 0, it'll suppress the entry entirely (the default).
-
-	int _auth_login_delay_needed(char const *)
-
-Once a valid login has been confirmed, this function is called to determine whether to send an "-ERR [LOGIN-DELAY]" response. Anything nonzero will be taken to mean that the user is not allowed to log in just now. It would be sensible to return the number of seconds before the user can next log in here, although it'll never be used.
+The auth modules handle username/password lookups and also username->mailboxname mappings. Please read auth_functions.h if you want to write an auth module.
 
 auth_file
 ---------
@@ -43,45 +27,7 @@ This is a simple auth handler for using UNIX system passwords, replacing only _a
 
 STORAGE MODULES
 
-This is quite a lot more complicated, and it should quickly become obvious why.
-
-	int _storage_lock_mailbox(char const *mailbox);
-
-Called once a user logs in, this should open and lock the mailbox, and return 0 if it fails. It's also a good opportunity to parse the file (or whatever you're using), but you can get away with doing that on a just-in-time basis. You'll need to override this.
-
-	unsigned long int _storage_message_count();
-
-Returns the number of total number of messages in the maildrop. You'll need to override this.
-
-	unsigned long int _storage_message_sum();
-
-Unused.
-
-	struct pop3_message *_storage_first_message();
-
-Returns the first message (it's a linked list). Returning NULL here is fine, that just means there are no messages. You'll need to override this.
-
-	struct pop3_message *_storage_message_number(unsigned long int n);
-
-Returns the "n"th message, or NULL. You don't need to override this unless you're running your own cache (eg. an array)
-
-	int _storage_uidl_supported();
-
-This should return 1 if (and only if) the UIDL command is to be supported (ie, that your backend is populating the 'uidl' field). You'll need to override this if you're supplying UIDL support.
-
-	int _storage_dump_message(struct pop3_message *, FILE *);
-	int _storage_dump_message_lines(struct pop3_message *, unsigned long int, FILE *);
-	int _storage_dump_headers(struct pop3_message *, FILE *);
-
-These are all ways of telling the storage back-end to (line-by-line, if it wants to) output (byte-stuffed) either the whole message, some lines of the body, or the headers (the latter two are just used by TOP). You don't need to override any of these if you were brave enough to override the below function.
-
-	int _storage_dump_fragment(unsigned long int from_offset, unsigned long int to_offset, unsigned long int skip_lines, unsigned long int max_lines, FILE *output);
-
-This should output 'max_lines' lines from 'from_offset' (which only has meaning to the storage module) having skipped 'skip_lines' lines first, and going no further than 'to_offset'. That's quite a mouthful, but the purpose is to handle a pair of byte offsets marking the endpoints and to work with both RETR (skip 1 line, no [0] maximum, start at start-of-header, end at end-of-body) and TOP (skip 1 line, no maximum, start-of-header, end-of-header ... followed by skip 0 lines, maximum 'n' lines, end-of-header, end-of-body). The 1-line skipping is a quirk of mbox format, but I'm keeping it in there to simplify parsing.
-
-	int _storage_synch();
-
-Writes the mailbox back out, minus any flagged-deleted messages. You'll need to override this
+Handles reading/deleting messages. Please read storage_functions.h if you want to write a storage module.
 
 storage_mbox
 ------------
@@ -90,7 +36,7 @@ This is a fully-functional 'mbox'-format storage handler, so if that's what you'
 
 MODULE BACKEND
 
-The modules are dlopen()ed in and then their functions are copied (effectively) into the existing symbol table. You can provide multiple modules of the same basic class, with the first module to declare a function getting its version used. Anything that's not defined by any module will use the equivalent default function, most of which do nothing, but some of which are useful (see above). I'm not currently sure if DSOs on GNU and *BSD support dynamic loading of this type, but if they do, then at some point I'll get around to adding in support for them.
+The modules are dlopen()ed in and then their functions are copied (effectively) into the existing symbol table. You can provide multiple modules of the same basic class, with the first module to declare a function getting its version used. Anything that's not defined by any module will use the equivalent default function, most of which do nothing, but some of which are useful (see the relevant header files).
 
 WRITING YOUR OWN MODULES
 
@@ -110,6 +56,7 @@ BUILDING
 
 ./configure --with-openssl
 make
+make install
 
 WHINING
 

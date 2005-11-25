@@ -1,4 +1,5 @@
 #include "storage.h"
+enum whichUser _default_storage_need_user() ;
 int _default_storage_uidl_supported() ;
 enum arrayStyle _default_storage_array_style() ;
 int _default_storage_dump_fragment(unsigned long int from, unsigned long int to, unsigned long int skip_lines, unsigned long int max_lines, FILE *out) ;

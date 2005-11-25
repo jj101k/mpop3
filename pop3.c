@@ -12,6 +12,35 @@
 // more practically, this/2 would be okay.
 #define MAX_POP3_ARG_COUNT RFC_MAX_INPUT_LENGTH
 
+#include "config.h"
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <pwd.h>
+char drop_privs_to_user(char const *username) {
+	if(!getuid()) {
+		struct passwd *pswd=getpwnam(username);
+		if(!pswd) return 0;
+		if(!pswd->pw_uid) return 0; // Don't SU to root
+		if(!pswd->pw_gid) return 0; // ...or root's buddies
+		if(setgid(pswd->pw_gid)!=0) return 0;
+		if(setuid(pswd->pw_uid)!=0) return 0;
+		return 1;
+	} else {
+		// If we're already unprivileged, return success.
+		return 1;
+	}
+}
+
+#include <syslog.h>
+void drop_privs() {
+	if(!drop_privs_to_user(SAFE_USER)) {
+		syslog(LOG_ERR, "Failed to drop privs, aborting");
+		exit(1);
+	}
+}
+
+
 #include <stdarg.h>
 int _pop3_fprintf(FILE *out, char const *format, ...) {
 	va_list ap;

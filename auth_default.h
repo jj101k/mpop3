@@ -1,3 +1,4 @@
+char _default_auth_need_root() ;
 char const *_default_auth_timestamp() ;
 char const *_default_auth_timestamp() ;
 char const *_default_auth_password(char const *username) ;

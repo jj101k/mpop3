@@ -105,7 +105,7 @@ int accept_loop(int l_socket, int sockaddr_len) {
 #include <syslog.h>
 #include <stdarg.h>
 
-int net_server_start() {
+int net_server_start(bool su_after_bind) {
 	struct addrinfo addrhints, *first_addrinfo_result, *ai_res_p;
 	int rv;
 	int sockets_in_use=0;
@@ -144,6 +144,7 @@ int net_server_start() {
 #if USE_RENDEZVOUS
 			if(using_port) {
 				close(current_socket);
+				syslog(LOG_ERR, "bind() failed");
 				continue;
 			} else if(ai_res_p->ai_family==PF_INET) {
 				((struct sockaddr_in *)(ai_res_p->ai_addr))->sin_port=0;
@@ -151,16 +152,19 @@ int net_server_start() {
 				((struct sockaddr_in6 *)(ai_res_p->ai_addr))->sin6_port=0;
 			}
 			if(bind(current_socket, ai_res_p->ai_addr, ai_res_p->ai_addrlen) < 0) {
+				syslog(LOG_ERR, "bind() failed");
 				close(current_socket);
 				continue;
 			}
 #else
+			syslog(LOG_ERR, "bind() failed");
 			close(current_socket);
 			continue;
 #endif
 		}
 
 		if (listen(current_socket, SOMAXCONN) < 0) {
+			syslog(LOG_ERR, "listen() failed");
 			close(current_socket);
 			continue;
 		}
@@ -173,6 +177,7 @@ int net_server_start() {
 			break;
 		} else if(!childpid) {
 			// Child
+			if(su_after_bind) drop_privs();
 			accept_loop(current_socket, ai_res_p->ai_addrlen);
 			exit(0);
 		} else {

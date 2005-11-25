@@ -2,12 +2,8 @@ To do:
 
 * Fix all the FIXMEs
 * Add docs
-* Add install target
-* Add privdrop and/or privsep support
 * Make some of the module options configurable
-* Add some kind of need-privs-for-auth option
-* Add some kind of need-privs-for-storage option
-* Add su-after-bind() support
+* Add test for safe user
 
 Not happening very soon:
 
@@ -19,3 +15,4 @@ Probably never happen:
 
 * Add SASL support??
 * Add message expiry support
+* Add privsep support?

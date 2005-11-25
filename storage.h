@@ -20,4 +20,6 @@ struct pop3_message {
 
 enum arrayStyle {asArray, asLinkedList};
 
+enum whichUser {wuDefault, wuAny, wuMailbox};
+
 #endif
