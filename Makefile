@@ -1,6 +1,6 @@
 include defaults.mk
 TARGET=mpop3
-OBJECTS=main.o storage_default.o pop_commands.o pop3.o util.o modules.o auth_default.o parse_conffile.o
+OBJECTS=main.o storage_default.o pop_commands.o pop3.o util.o modules.o auth_default.o parse_conffile.o net.o
 ALSO_CLEAN=.gdb_history parse_conffile.c
 SUBDIRS=auth_file storage_mbox
 

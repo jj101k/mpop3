@@ -2,3 +2,8 @@
 - Added changelog
 - Fixed IPng support
 - Added array-stored message metadata support
+
+008:
+- Switched to getaddrinfo() for network (IP, IPng) support
+- Moved networking stuff out into net.[ch]
+- Added rendezvous support, but does it work? I have no idea.
