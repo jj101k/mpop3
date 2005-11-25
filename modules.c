@@ -7,7 +7,7 @@ char const *(*_auth_login)(char const *);
 int (*_auth_login_delay_needed)(char const *);
 int (*_auth_default_login_delay)();
 
-#define LOAD_MISC_FUNC(foo,bar) {if(dlhandle) foo=dlsym(dlhandle, bar); if(!foo) foo=dlsym(RTLD_DEFAULT, "_default" bar); if(!foo) printf("%s\n", dlerror());} 
+#define LOAD_MISC_FUNC(foo,bar) {if(dlhandle) foo=dlsym(dlhandle, bar); else if(!foo) {foo=dlsym(RTLD_DEFAULT, "_default" bar); if(!foo) printf("%s\n", dlerror());}} 
 
 int auth_hookup(void *dlhandle) {
 	LOAD_MISC_FUNC(_auth_attempt_login, "_auth_attempt_login");

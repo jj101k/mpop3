@@ -1,4 +1,5 @@
 %option noyywrap
+%option nounput
 
 %{
 #include <dlfcn.h>
@@ -16,7 +17,7 @@ PATH [[:alnum:]\._/][[:alnum:]_\.\-/]*
 	auth_hookup(dlhandle);
 }
 "storage_module "{PATH}$ {
-	char *module_path=yytext+strlen("auth_module ");
+	char *module_path=yytext+strlen("storage_module ");
 	void *dlhandle=dlopen(module_path, RTLD_NOW|RTLD_LOCAL);
 	storage_hookup(dlhandle);
 }
