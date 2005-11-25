@@ -51,3 +51,9 @@
 - Added config option 'storage_dir' to storage_mbox, making testing rather easier.
 - Improved testing system by protecting the test spool
 - Added -D (detach) option, but needs pidfile support before it's useful.
+
+015:
+- Added anti-timing-analysis measure in APOP
+- Added auth_postgresql
+- Changed per-module config to start with "> "
+- Support lots of whitespace in config arguments

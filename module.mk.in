@@ -10,13 +10,13 @@ BUILD=gcc @MAKE_SHARED@
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(BUILD) $(LIBS) -o $(TARGET) $(OBJECTS) $(OTHER_OBJECTS)
+	$(BUILD) $(LIBS) $(EXTRA_LIBS) -o $(TARGET) $(OBJECTS) $(OTHER_OBJECTS)
 
 clean:
 	rm -f $(OBJECTS) $(TARGET) $(ALSO_CLEAN)
 
 .c.o:
-	$(CC) -I.. $(DEFINES) -c $<
+	$(CC) -I.. $(EXTRA_INCLUDES) $(DEFINES) -c $<
 
 install: $(TARGET)
 	$(INSTALL) $(TARGET) $(libdir)

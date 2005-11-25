@@ -1,6 +1,6 @@
-AC_INIT(mpop3, 0.14)
+AC_INIT(mpop3, 0.15)
 AC_ARG_WITH(safe-user,
-	AC_HELP_STRING([--with-safe-user=foo], [SU to this user if you're root (default=mail)]),
+	AC_HELP_STRING([--with-safe-user=ARG], [SU to this user if you're root [[ARG=mail]]]),
 	[
 		AC_DEFINE_UNQUOTED(SAFE_USER, "$withval")
 	],
@@ -18,10 +18,10 @@ if( !pwd || !(pwd->pw_uid) || !(pwd->pw_gid) ) return 1;
 ]])
 ],
 [],
-[ AC_MSG_FAILURE([Bad fallback username, please use --with-safe-user=foo]) ])
+[ AC_MSG_FAILURE([Bad fallback username, please use --with-safe-user=someuser]) ])
 WITH_OPENSSL=1
 AC_ARG_WITH(openssl,
-	AC_HELP_STRING([--with-openssl],[Use openssl md5/rand functions (default=yes)]),
+	AC_HELP_STRING([--without-openssl],[Don't openssl md5/rand functions]),
 	[
 		if test "x$withval" == "xno" ; then
 			WITH_OPENSSL=0

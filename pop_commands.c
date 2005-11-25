@@ -168,14 +168,24 @@ struct pop3_command_rv pop3_APOP(int argc, char *argv[], enum pop3_state *curren
 	char digest_raw[EVP_MAX_MD_SIZE];
 	char digest_hex[(2*EVP_MAX_MD_SIZE)+1];
 
-	if(!password) return pop3_rv_ebadlogin;
+	// Always do the MD5 thing to protect against timing attacks.
+	char const *password_for_digest;
+	if(!password) {
+		password_for_digest="xxxxxxxx";
+		return pop3_rv_ebadlogin;
+	} else {
+		password_for_digest=password;
+	}
 
 	ssl_context=EVP_MD_CTX_create();
 	if(!EVP_DigestInit(ssl_context, EVP_md5())) return pop3_rv_internal_error;
 	if(!EVP_DigestUpdate(ssl_context, timestamp, strlen(timestamp))) {EVP_MD_CTX_cleanup(ssl_context); return pop3_rv_internal_error;}
-	if(!EVP_DigestUpdate(ssl_context, password, strlen(password))) {EVP_MD_CTX_cleanup(ssl_context); return pop3_rv_internal_error;}
+	if(!EVP_DigestUpdate(ssl_context, password_for_digest, strlen(password))) {EVP_MD_CTX_cleanup(ssl_context); return pop3_rv_internal_error;}
 	if(!EVP_DigestFinal(ssl_context, digest_raw, NULL)) {EVP_MD_CTX_cleanup(ssl_context); return pop3_rv_internal_error;}
 	hex_from_binary(digest_hex, digest_raw, EVP_MD_size(EVP_md5()));
+
+	if(!password) return pop3_rv_ebadlogin;
+
 	if(!strcasecmp(argv[2],digest_hex)) {
 		char const *mailbox=_auth_login(username);
 		if(!mailbox) {

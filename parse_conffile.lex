@@ -9,14 +9,20 @@
 #include "conffile.h"
 
 struct simpleConfig *current_tags=NULL;
+
+char const *skip_spaces(char const *in_string)	{
+	char const *stringp;
+	for(stringp=in_string; stringp[0]==' ' || stringp[0]=='\t'; stringp++) ;
+	return stringp;
+}
 %}
 
 PATH [[:alnum:]\._/][[:alnum:]_\.\-/]*
 
 %%
 
-"auth_module "{PATH}$ {
-	char *module_path=yytext+strlen("auth_module ");
+^"auth_module"[[:space:]]+{PATH}$ {
+	char const *module_path=skip_spaces(yytext+strlen("auth_module"));
 	void *dlhandle=dlopen(module_path, RTLD_NOW|RTLD_LOCAL);
 	if(dlhandle) {
 		auth_hookup(dlhandle);
@@ -24,8 +30,8 @@ PATH [[:alnum:]\._/][[:alnum:]_\.\-/]*
 		syslog(LOG_WARNING, "Couldn't find auth module '%s'", module_path);
 	}
 }
-"storage_module "{PATH}$ {
-	char *module_path=yytext+strlen("storage_module ");
+^"storage_module"[[:space:]]+{PATH}$ {
+	char const *module_path=skip_spaces(yytext+strlen("storage_module"));
 	void *dlhandle=dlopen(module_path, RTLD_NOW|RTLD_LOCAL);
 	if(dlhandle) {
 		storage_hookup(dlhandle);
@@ -34,20 +40,22 @@ PATH [[:alnum:]\._/][[:alnum:]_\.\-/]*
 	}
 }
 
-[\r\t\n]+
+[\r\n]+
 
-#.*
+^#.*
 
-.+ {
+^"> "[[:alnum:]_]+[[:space:]]*.+ {
 	struct simpleConfig *sc_cursor;
 	char found_tag=0;
 	size_t tag_length;
+	char const *keyword_start=yytext+strlen("> ");
 	for(sc_cursor=current_tags;sc_cursor && sc_cursor->tag; sc_cursor++) {
 		tag_length=strlen(sc_cursor->tag);
-		if((!strncmp(yytext, sc_cursor->tag, tag_length)) && yytext[tag_length]==' ') {
+		if((!strncmp(keyword_start, sc_cursor->tag, tag_length)) && ( keyword_start[tag_length]==' ' || keyword_start[tag_length]=='\t' ) ) {
 			// Match
 			found_tag=1;
-			char rv=(sc_cursor->function)(yytext+tag_length+1);
+			char const *argument_start=skip_spaces(keyword_start+tag_length);
+			char rv=(sc_cursor->function)(argument_start);
 			if(!rv) {
 				syslog(LOG_WARNING, "Module config '%s' failed", sc_cursor->tag);
 			}

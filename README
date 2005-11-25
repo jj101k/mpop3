@@ -1,7 +1,7 @@
 MPOP3 - a modular POP3 server
 =============================
 
-This program is a modular POP3 implementation, meaning that it supports different authentication/storage modules loadable at runtime. At the moment, I only have three, and the default config file (mpop3.conf) loads two of them by default: auth_file and storage_mbox.
+This program is a modular POP3 implementation, meaning that it supports different authentication/storage modules loadable at runtime. At the moment, I only have four, and the default config file (mpop3.conf) loads two of them by default: auth_file and storage_mbox.
 
 
 AUTH MODULES
@@ -20,6 +20,12 @@ This is a simple auth handler for using UNIX system passwords, replacing only _a
 
 config options: none
 
+auth_postgresql
+---------------
+
+Checks against a PostgreSQL database; also supports (optionally) mailboxnames as the second field in the SQL result.
+
+Config options: connection (a PostgreSQL connection string), query (an SQL statement with $1 in the place of the username to compare against)
 
 STORAGE MODULES
 
@@ -37,10 +43,11 @@ For further information about the modules system, please consult README.modules
 
 CONFIG FILE
 
-auth_module <filename>
-<auth module config options>
-storage_module <filename>
-<storage module config options>
+auth_module [filename]
+> [auth module config option]
+> [auth module config option]
+storage_module [filename]
+> [storage module config option]
 
 NOTES
 
