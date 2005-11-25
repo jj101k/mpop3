@@ -1,4 +1,11 @@
-AC_INIT(mpop3, 0.10)
+AC_INIT(mpop3, 0.11)
+AC_SUBST(SAFE_USER, "mail")
+AC_ARG_WITH(safe-user,
+	[	--with-safe-user=foo	SU to this user if you're root	],
+	[
+		AC_SUBST(SAFE_USER, $withval)
+	]
+)
 AC_ARG_WITH(openssl,
 	[	--with-openssl	Use openssl md5/rand functions],
 	[
@@ -22,8 +29,16 @@ AC_CHECK_LIB(crypto,EVP_DigestInit, [
 		LIBS="$LIBS -lcrypto"
 	fi
 ], [AC_DEFINE(USE_OPENSSL,0)])
+
+AC_CHECK_FILE(/usr/lib/libc.dylib, [
+	AC_SUBST(SHARED_EXT,".bundle")
+	AC_SUBST(MAKE_SHARED,"-bundle")
+], [
+	AC_SUBST(SHARED_EXT,".so")
+	AC_SUBST(MAKE_SHARED,"-shared")
+])
 AC_CHECK_HEADERS([dns_sd.h], [], [AC_DEFINE(USE_RENDEZVOUS,0)])
 AC_PROG_LEX
 AC_PROG_CC
-AC_CONFIG_FILES([Makefile defaults.mk module.mk])
+AC_CONFIG_FILES([Makefile defaults.mk module.mk config.h])
 AC_OUTPUT

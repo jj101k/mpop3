@@ -18,3 +18,9 @@
 - Added timeout support
 - Added syslog support
 - This is the 0.10 release.
+
+011:
+- Made more portable (should build fine on *BSD and GNU now)
+- Used a slightly more sensible approach to the defaults.
+- Set sensible default storage_mbox root
+- Added very simple priv-drop support

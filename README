@@ -1,7 +1,7 @@
 MPOP3 - a modular POP3 server
 =============================
 
-This program is a modular POP3 implementation, meaning that it supports different authentication/storage modules loadable at runtime. At the moment, I only have two, and the default config file (mpop3.conf) loads them by default: auth_file and storage_mbox.
+This program is a modular POP3 implementation, meaning that it supports different authentication/storage modules loadable at runtime. At the moment, I only have three, and the default config file (mpop3.conf) loads two of them by default: auth_file and storage_mbox.
 
 AUTH MODULES
 
@@ -35,6 +35,11 @@ auth_file
 ---------
 
 This is a simple authentication handler for reading usernames/passwords straight from a file. It's pretty much as minimal as it can get, replacing only the _auth_password() function, and it should be good for customising if you're going to be using APOP (plain-text passwords server-side).
+
+auth_getpw
+----------
+
+This is a simple auth handler for using UNIX system passwords, replacing only _auth_attempt_login and _auth_timestamp (NULL). APOP won't work with it.
 
 STORAGE MODULES
 

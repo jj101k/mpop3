@@ -8,7 +8,7 @@
 #include "pop3.h"
 #include "storage.h"
 
-#define MBOX_ROOT "spools"
+#define MBOX_ROOT "/var/mail"
 
 int spoolfd;
 FILE *spoolfp;
