@@ -1,4 +1,4 @@
-AC_INIT(mpop3, 0.15)
+AC_INIT(mpop3, 0.16)
 AC_ARG_WITH(safe-user,
 	AC_HELP_STRING([--with-safe-user=ARG], [SU to this user if you're root [[ARG=mail]]]),
 	[
@@ -37,6 +37,15 @@ AC_ARG_WITH(rendezvous,
 		fi
 	]
 )
+AC_ARG_WITH(bonjour,
+	AC_HELP_STRING([--with-bonjour],[Use rendezvous (apple zeroconf)]),
+	[
+		if test "x$withval" != "xno" ; then
+			AC_DEFINE(USE_RENDEZVOUS,1)
+			WITH_RENDEZVOUS=1
+		fi
+	]
+)
 AC_CHECK_LIB(crypto, EVP_DigestInit, [
 	if test "x$WITH_OPENSSL" == "x1" ; then
 		AC_DEFINE(USE_OPENSSL,1)
@@ -53,7 +62,10 @@ AC_CHECK_FILE(/usr/lib/libc.dylib, [
 	AC_SUBST(SHARED_EXT,".so")
 	AC_SUBST(MAKE_SHARED,"-shared")
 ])
+extra_modules=""
 AC_CHECK_HEADERS([dns_sd.h], [], [AC_DEFINE(USE_RENDEZVOUS,0)])
+AC_CHECK_HEADERS([libpq-fe.h], [extra_modules="$extra_modules auth_postgresql"], [])
+AC_SUBST(extra_modules)
 AC_PROG_LEX
 AC_PROG_CC
 AC_PROG_INSTALL

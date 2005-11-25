@@ -19,6 +19,10 @@ char const *_auth_attempt_login(char const *username, char const *password) {
 
 	if(!pwitem) return NULL;	
 
-	if(password && pwitem->pw_passwd && !strcmp(crypt(password, pwitem->pw_passwd), pwitem->pw_passwd)) return username;
+	if(password &&
+		pwitem->pw_passwd && 
+		!strcmp(crypt(password, pwitem->pw_passwd), pwitem->pw_passwd)
+	) return username;
+
 	return NULL;
 }

@@ -75,7 +75,7 @@ int _pop3_fprintf(FILE *out, char const *format, ...);
  * Turns 'bytes' bytes of 'in_string' into 'bytes'*2 hex characters in 'out_string', followed by a "\0" character.
  *
  */
-int hex_from_binary(char *outstring, char const *instring, unsigned long bytes);
+int hex_from_binary(char *outstring, unsigned char const *instring, unsigned long bytes);
 
 /*
  * drop_privs_to_user(char const *username)

@@ -70,7 +70,7 @@ int cache_metadata() {
 	unsigned long int current_offset=0;
 #if USE_OPENSSL
   EVP_MD_CTX *ssl_context;
-  char digest_raw[EVP_MAX_MD_SIZE];
+  unsigned char digest_raw[EVP_MAX_MD_SIZE];
   
   ssl_context=EVP_MD_CTX_create();
 	EVP_MD_CTX_init(ssl_context);

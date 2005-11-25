@@ -5,9 +5,17 @@
 #include <netdb.h>
 #include <string.h>
 #include <sys/types.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#if USE_RENDEZVOUS
+#include <dns_sd.h>
+#endif
+
+#include <errno.h>
+
+#include <syslog.h>
+#include <stdarg.h>
+
 #include "pop3.h"
 #include "net.h"
 
@@ -67,7 +75,7 @@ int accept_loop(int l_socket, int sockaddr_len) {
 	int accepted_fd;
 	pid_t child_pid;
 	struct sockaddr *socket_info=malloc(sockaddr_len);
-	int socket_info_len;
+	unsigned int socket_info_len;
 
 	last_process=&dummy_process;
 	process_count=0;
@@ -96,14 +104,6 @@ int accept_loop(int l_socket, int sockaddr_len) {
 	return 1;
 }
 
-#if USE_RENDEZVOUS
-#include <dns_sd.h>
-#endif
-
-#include <errno.h>
-
-#include <syslog.h>
-#include <stdarg.h>
 
 int net_server_start(bool su_after_bind, bool detach_after_bind) {
 	struct addrinfo addrhints, *first_addrinfo_result, *ai_res_p;
@@ -189,7 +189,7 @@ int net_server_start(bool su_after_bind, bool detach_after_bind) {
 			// Parent
 			nhpidlist[sockets_in_use]=childpid;
 #if USE_RENDEZVOUS
-			if(getsockname(current_socket, ai_res_p->ai_addr, (int *) &(ai_res_p->ai_addrlen) )!=0) {
+			if(getsockname(current_socket, ai_res_p->ai_addr, (unsigned int *) &(ai_res_p->ai_addrlen) )!=0) {
 				// nothing
 			} else if(ai_res_p->ai_family==PF_INET) {
 				using_port=((struct sockaddr_in *)(ai_res_p->ai_addr))->sin_port;
@@ -199,7 +199,7 @@ int net_server_start(bool su_after_bind, bool detach_after_bind) {
 			close(current_socket);
 			printf("Using port: %i\n", using_port);
 			if(using_port && ! used_rendezvous) {
-				dnssd_err=DNSServiceRegister( &sdRef, kDNSServiceFlagsAutoRename, 0,
+				dnssd_err=DNSServiceRegister( &sdRef, 0, 0,
 					NULL, "_pop3._tcp", NULL,
 					NULL, using_port, 0, NULL, NULL, NULL); 
 				if(dnssd_err==kDNSServiceErr_NoError) used_rendezvous=1;

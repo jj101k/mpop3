@@ -2,7 +2,7 @@
 
 char hexchar[]={'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
-int hex_from_binary(char *outstring, char const *instring, unsigned long bytes) {
+int hex_from_binary(char *outstring, unsigned char const *instring, unsigned long bytes) {
 	int i;
 	for(i=0;i<bytes;i++) {
 		outstring[i*2]=hexchar[(instring[i]&240)>>4];

@@ -15,7 +15,7 @@ char *timestamp=NULL;
 
 char const *_default_auth_timestamp() {
 	if(timestamp) return timestamp;
-	char buff[RAND_BYTES];
+	unsigned char buff[RAND_BYTES];
 	struct utsname uname_out;
 	if(!RAND_bytes(buff, RAND_BYTES)) return NULL;
 	if(uname(&uname_out)!=0) return NULL;

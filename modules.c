@@ -12,16 +12,16 @@ int (*_auth_login_delay_needed)(char const *);
 int (*_auth_default_login_delay)();
 char (*_auth_need_root)() ;
 
-#define LOAD_MISC_FUNC(fname, qname) {if(dlhandle) fname=dlsym(dlhandle, qname); else if(!fname) {fname=_default##fname;}}
+#define LOAD_MISC_FUNC(fname) {if(dlhandle) fname=dlsym(dlhandle, #fname); else if(!fname) {fname=_default##fname;}}
 
 int auth_hookup(void *dlhandle) {
-	LOAD_MISC_FUNC(_auth_attempt_login, "_auth_attempt_login");
-	LOAD_MISC_FUNC(_auth_timestamp, "_auth_timestamp");
-	LOAD_MISC_FUNC(_auth_password, "_auth_password");
-	LOAD_MISC_FUNC(_auth_login, "_auth_login");
-	LOAD_MISC_FUNC(_auth_login_delay_needed, "_auth_login_delay_needed");
-	LOAD_MISC_FUNC(_auth_default_login_delay, "_auth_default_login_delay");
-	LOAD_MISC_FUNC(_auth_need_root, "_auth_need_root");
+	LOAD_MISC_FUNC(_auth_attempt_login);
+	LOAD_MISC_FUNC(_auth_timestamp);
+	LOAD_MISC_FUNC(_auth_password);
+	LOAD_MISC_FUNC(_auth_login);
+	LOAD_MISC_FUNC(_auth_login_delay_needed);
+	LOAD_MISC_FUNC(_auth_default_login_delay);
+	LOAD_MISC_FUNC(_auth_need_root);
 	struct simpleConfig *(*config_hookup)() = dlsym(dlhandle, "config_hookup");
 	if(config_hookup) {
 		current_tags=config_hookup();
@@ -46,19 +46,19 @@ int (*_storage_dump_fragment)(unsigned long int, unsigned long int, unsigned lon
 enum whichUser (*_storage_need_user)() ;
 
 int storage_hookup(void *dlhandle) {
-	LOAD_MISC_FUNC(_storage_array_style, "_storage_array_style");
-	LOAD_MISC_FUNC(_storage_lock_mailbox, "_storage_lock_mailbox");
-	LOAD_MISC_FUNC(_storage_message_count, "_storage_message_count");
-	LOAD_MISC_FUNC(_storage_message_sum, "_storage_message_sum");
-	LOAD_MISC_FUNC(_storage_first_message, "_storage_first_message");
-	LOAD_MISC_FUNC(_storage_message_number, "_storage_message_number");
-	LOAD_MISC_FUNC(_storage_uidl_supported, "_storage_uidl_supported");
-	LOAD_MISC_FUNC(_storage_dump_message, "_storage_dump_message");
-	LOAD_MISC_FUNC(_storage_dump_message_lines, "_storage_dump_message_lines");
-	LOAD_MISC_FUNC(_storage_dump_headers, "_storage_dump_headers");
-	LOAD_MISC_FUNC(_storage_synch, "_storage_synch");
-	LOAD_MISC_FUNC(_storage_dump_fragment, "_storage_dump_fragment");
-	LOAD_MISC_FUNC(_storage_need_user, "_storage_need_user");
+	LOAD_MISC_FUNC(_storage_array_style);
+	LOAD_MISC_FUNC(_storage_lock_mailbox);
+	LOAD_MISC_FUNC(_storage_message_count);
+	LOAD_MISC_FUNC(_storage_message_sum);
+	LOAD_MISC_FUNC(_storage_first_message);
+	LOAD_MISC_FUNC(_storage_message_number);
+	LOAD_MISC_FUNC(_storage_uidl_supported);
+	LOAD_MISC_FUNC(_storage_dump_message);
+	LOAD_MISC_FUNC(_storage_dump_message_lines);
+	LOAD_MISC_FUNC(_storage_dump_headers);
+	LOAD_MISC_FUNC(_storage_synch);
+	LOAD_MISC_FUNC(_storage_dump_fragment);
+	LOAD_MISC_FUNC(_storage_need_user);
 	struct simpleConfig *(*config_hookup)() = dlsym(dlhandle, "config_hookup");
 	if(config_hookup) {
 		current_tags=config_hookup();

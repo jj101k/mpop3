@@ -1,39 +1,24 @@
-007:
-- Added changelog
-- Fixed IPng support
-- Added array-stored message metadata support
+current:
+016:
+- Rewrote function macros
+- Re-ordered changelog!
+- Minor tweaks to make the code more maintainable
+- Minor warning fixes
+- 'bonjour' can now be treated as an alias of 'rendezvous'
+- auth_postgresql only gets compiled when it looks possible
+- Updates to make it compile cleanly on Tiger
 
-008:
-- Switched to getaddrinfo() for network (IP, IPng) support
-- Moved networking stuff out into net.[ch]
-- Added rendezvous support, but does it work? I have no idea.
+015:
+- Added anti-timing-analysis measure in APOP
+- Added auth_postgresql
+- Changed per-module config to start with "> "
+- Support lots of whitespace in config arguments
 
-009:
-- Rendezvous support definitely works
-- Added testrendezvous make target
-- Added --with-rendezvous configure option
-
-010:
-- Added the module auth_getpw, which seems to work
-- Added timeout support
-- Added syslog support
-- This is the 0.10 release.
-
-011:
-- Made more portable (should build fine on *BSD and GNU now)
-- Used a slightly more sensible approach to the defaults.
-- Set sensible default storage_mbox root
-- Added very simple priv-drop support
-
-012:
-- Privilege revocation at earliest convenience (using _auth_need_root() and _storage_need_user())
-- Added more documentation
-- Switched to getopt()
-- Added config-file (-f) option
-- Added help (-h) option
-- Added 'install' target
-- Switched to auth_getpw instead of auth_file in default config
-- Removed '-C' from make command line (BSD compat)
+014:
+- Added module config support
+- Added config option 'storage_dir' to storage_mbox, making testing rather easier.
+- Improved testing system by protecting the test spool
+- Added -D (detach) option, but needs pidfile support before it's useful.
 
 013:
 - Always create destination dirs
@@ -46,14 +31,40 @@
 - Removed useless config.h.in
 - Added test target
 
-014:
-- Added module config support
-- Added config option 'storage_dir' to storage_mbox, making testing rather easier.
-- Improved testing system by protecting the test spool
-- Added -D (detach) option, but needs pidfile support before it's useful.
+012:
+- Privilege revocation at earliest convenience (using _auth_need_root() and _storage_need_user())
+- Added more documentation
+- Switched to getopt()
+- Added config-file (-f) option
+- Added help (-h) option
+- Added 'install' target
+- Switched to auth_getpw instead of auth_file in default config
+- Removed '-C' from make command line (BSD compat)
 
-015:
-- Added anti-timing-analysis measure in APOP
-- Added auth_postgresql
-- Changed per-module config to start with "> "
-- Support lots of whitespace in config arguments
+011:
+- Made more portable (should build fine on *BSD and GNU now)
+- Used a slightly more sensible approach to the defaults.
+- Set sensible default storage_mbox root
+- Added very simple priv-drop support
+
+010:
+- Added the module auth_getpw, which seems to work
+- Added timeout support
+- Added syslog support
+- This is the 0.10 release.
+
+009:
+- Rendezvous support definitely works
+- Added testrendezvous make target
+- Added --with-rendezvous configure option
+
+008:
+- Switched to getaddrinfo() for network (IP, IPng) support
+- Moved networking stuff out into net.[ch]
+- Added rendezvous support, but does it work? I have no idea.
+
+007:
+- Added changelog
+- Fixed IPng support
+- Added array-stored message metadata support
+
