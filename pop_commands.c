@@ -199,11 +199,21 @@ struct pop3_command_rv pop3_STAT(int argc, char *argv[], enum pop3_state *unused
 	unsigned long int message_count=0;
 	unsigned long int message_sum=0;
 	struct pop3_message *current_message;
+	unsigned long int i;
 
-	for(current_message=_storage_first_message();current_message;current_message=current_message->next) {
-		if(!current_message->deleted) {
-			message_count++;
-			message_sum+=current_message->size;
+	if(_storage_array_style()==asArray) {
+		message_count=_storage_message_count();
+		for(i=0, current_message=_storage_first_message();i<message_count;i++, current_message++) {
+			if(!current_message->deleted) {
+				message_sum+=current_message->size;
+			}
+		}
+	} else {
+		for(current_message=_storage_first_message();current_message;current_message=current_message->next) {
+			if(!current_message->deleted) {
+				message_count++;
+				message_sum+=current_message->size;
+			}
 		}
 	}
 
@@ -217,8 +227,15 @@ struct pop3_command_rv pop3_LIST(int argc, char *argv[], enum pop3_state *unused
 	
 	if(argc==1) {
 		_send_OK(ofp, S_LIST_FOLLOWS);
-		for(i=1;current_message;i++, current_message=current_message->next) {
-			if(!current_message->deleted) _pop3_fprintf(ofp, "%lu %lu\r\n", i, current_message->size);
+		if(_storage_array_style()==asArray) {
+			unsigned long int message_count=_storage_message_count();
+			for(i=1;i<=message_count;i++, current_message++) {
+				if(!current_message->deleted) _pop3_fprintf(ofp, "%lu %lu\r\n", i, current_message->size);
+			}
+		} else {
+			for(i=1;current_message;i++, current_message=current_message->next) {
+				if(!current_message->deleted) _pop3_fprintf(ofp, "%lu %lu\r\n", i, current_message->size);
+			}
 		}
 		_pop3_fprintf(ofp, ".\r\n");
 
@@ -239,9 +256,17 @@ struct pop3_command_rv pop3_rv_reset={1, 0, S_RESET, NULL};
 
 struct pop3_command_rv pop3_RSET(int argc, char *argv[], enum pop3_state *unused2, FILE *ifp, FILE *ofp) {
 	struct pop3_message *current_message=_storage_first_message();
+	unsigned long int i;
 	
-	for(;current_message;current_message=current_message->next) {
-		current_message->deleted=0;
+	if(_storage_array_style()==asArray) {
+		unsigned long int message_count=_storage_message_count();
+		for(i=0;i<message_count;current_message++, i++) {
+			current_message->deleted=0;
+		}
+	} else {
+		for(;current_message;current_message=current_message->next) {
+			current_message->deleted=0;
+		}
 	}
 
 	return pop3_rv_reset;
@@ -256,8 +281,15 @@ struct pop3_command_rv pop3_UIDL(int argc, char *argv[], enum pop3_state *unused
 	
 	if(argc==1) {
 		_send_OK(ofp, S_LIST_FOLLOWS);
-		for(i=1;current_message;i++, current_message=current_message->next) {
-			if(!current_message->deleted) _pop3_fprintf(ofp, "%lu %s\r\n", i, current_message->uidl);
+		if(_storage_array_style()==asArray) {
+			unsigned long int message_count=_storage_message_count();
+			for(i=1;i<=message_count;i++, current_message++) {
+				if(!current_message->deleted) _pop3_fprintf(ofp, "%lu %s\r\n", i, current_message->uidl);
+			}
+		} else {
+			for(i=1;current_message;i++, current_message=current_message->next) {
+				if(!current_message->deleted) _pop3_fprintf(ofp, "%lu %s\r\n", i, current_message->uidl);
+			}
 		}
 		_pop3_fprintf(ofp, ".\r\n");
 

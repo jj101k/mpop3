@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include "pop3.h"
 #include "auth_functions.h"
 
 #ifdef USE_OPENSSL

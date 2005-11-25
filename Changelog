@@ -1,0 +1,4 @@
+007:
+- Added changelog
+- Fixed IPng support
+- Added array-stored message metadata support

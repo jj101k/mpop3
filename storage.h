@@ -18,4 +18,6 @@ struct pop3_message {
 	char deleted;
 };
 
+enum arrayStyle {asArray, asLinkedList};
+
 #endif

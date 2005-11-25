@@ -70,24 +70,24 @@ void _handle_sigchild(int unused) {
 	}
 }
 
-// FIXME
 int _bind_etc_ipng() {
 	int accepted_fd;
-	struct protoent *proto=getprotobyname("ip6");
 	struct sockaddr_in6 sockaddr;
-	int socket_fd=socket(AF_INET6, SOCK_STREAM, proto->p_proto);
+	int socket_fd=socket(AF_INET6, SOCK_STREAM, 0);
 	pid_t child_pid;
 
 	if(socket_fd==-1) return -1;
 	sockaddr.sin6_len=sizeof(in6addr_any);
-	sockaddr.sin6_family=IPPROTO_TCP;
+	sockaddr.sin6_family=AF_INET6;
 	sockaddr.sin6_port=DEFAULT_PORT;
 	sockaddr.sin6_flowinfo=0;
 	sockaddr.sin6_addr=in6addr_any;
-	sockaddr.sin6_scope_id=0;
+	sockaddr.sin6_scope_id=1;
 	if(bind(socket_fd, (struct sockaddr *)&sockaddr, sizeof(sockaddr))==-1) return -1;
 	if(listen(socket_fd, DEFAULT_BACKLOG)==-1) return -1;
 	int sockaddr_len=sizeof(sockaddr);
+	last_process=&dummy_process;
+	process_count=0;
 	signal(SIGCHLD, _handle_sigchild);
 	while(1) {
 		accepted_fd=accept(socket_fd, (struct sockaddr *)&sockaddr, &sockaddr_len);
@@ -114,9 +114,8 @@ int _bind_etc_ipng() {
 
 int _bind_etc_ip() {
 	int accepted_fd;
-	struct protoent *proto=getprotobyname("ip");
 	struct sockaddr_in sockaddr;
-	int socket_fd=socket(AF_INET, SOCK_STREAM, proto->p_proto);
+	int socket_fd=socket(AF_INET, SOCK_STREAM, 0);
 	pid_t child_pid;
 
 	if(socket_fd==-1) return -1;
@@ -126,6 +125,8 @@ int _bind_etc_ip() {
 	if(bind(socket_fd, (struct sockaddr *)&sockaddr, sizeof(sockaddr))==-1) return -1;
 	if(listen(socket_fd, DEFAULT_BACKLOG)==-1) return -1;
 	int sockaddr_len=sizeof(sockaddr);
+	last_process=&dummy_process;
+	process_count=0;
 	signal(SIGCHLD, _handle_sigchild);
 	while(1) {
 		accepted_fd=accept(socket_fd, (struct sockaddr *)&sockaddr, &sockaddr_len);

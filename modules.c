@@ -19,6 +19,7 @@ int auth_hookup(void *dlhandle) {
 	return 1;
 }
 
+enum arrayStyle (*_storage_array_style)();
 int (*_storage_lock_mailbox)(char const *mailbox);
 unsigned long int (*_storage_message_count)();
 unsigned long int (*_storage_message_sum)();
@@ -32,6 +33,7 @@ int (*_storage_synch)();
 int (*_storage_dump_fragment)(unsigned long int, unsigned long int, unsigned long int, unsigned long int, FILE *);
 
 int storage_hookup(void *dlhandle) {
+	LOAD_MISC_FUNC(_storage_array_style,"_storage_array_style");
 	LOAD_MISC_FUNC(_storage_lock_mailbox,"_storage_lock_mailbox");
 	LOAD_MISC_FUNC(_storage_message_count,"_storage_message_count");
 	LOAD_MISC_FUNC(_storage_message_sum,"_storage_message_sum");

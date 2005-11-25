@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "pop3.h"
 
 #define MAX_PASSWORD_LINE_LEN 1024
