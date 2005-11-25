@@ -1,0 +1,5 @@
+To make a tarball:
+make -f dist.mk
+
+Otherwise, to turn a checkout into a buildable version, it's just:
+autoconf
