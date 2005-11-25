@@ -14,7 +14,6 @@
 #include "modules.h"
 #include "parse_conffile.h"
 
-#define DEFAULT_PORT htons(1110)
 
 #define PRIMARY_PROTOCOL "ip"
 #define SECONDARY_PROTOCOL "ipv6"

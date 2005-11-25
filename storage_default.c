@@ -1,11 +1,5 @@
 #include <stdio.h>
 #include "storage_functions.h"
-/*#include <unistd.h>
-#include <regex.h>
-#include <fcntl.h>
-#include <string.h>
-#include "pop3.h"
-*/
 
 int _default_storage_uidl_supported() {return 0;}
 
@@ -34,5 +28,17 @@ int _default_storage_lock_mailbox(char const *mailboxname) {
 unsigned long int _default_storage_message_count() {return 0;};
 unsigned long int _default_storage_message_sum() {return 0;};
 struct pop3_message *_default_storage_first_message() {return NULL;};
-struct pop3_message *_default_storage_message_number(unsigned long int index) { return NULL; }
+struct pop3_message *_default_storage_message_number(unsigned long int index) {
+	unsigned long int j;
+	struct pop3_message *current_message;
+
+	if(index>message_count) return NULL;
+	if(index<1) return NULL;
+	if(index==1) return _storage_first_message();
+	current_message=first_message;
+	for(j=1;j<index;j++, current_message=current_message->next) {
+		if(!current_message) return NULL;
+	}
+	return current_message;
+}
 int _default_storage_synch() { return 0; }

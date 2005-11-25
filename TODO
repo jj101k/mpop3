@@ -1,0 +1,7 @@
+* Need to fix IPng support. It's broken, for non-apparent reasons.
+* Fix all the FIXMEs
+* Add docs
+* Add install target
+* Make it buildable on linux/*BSD?
+* Use automake?
+* Write better autoconf stuff?

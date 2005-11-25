@@ -1,9 +1,35 @@
 #include <stdlib.h>
 #include <string.h>
 #include "auth_functions.h"
+
+#ifdef USE_OPENSSL
+
+#include <openssl/rand.h>
+#include <sys/utsname.h>
+
+char *timestamp=NULL;
+#define RAND_BYTES 16
+
+char const *_default_auth_timestamp() {
+	if(timestamp) return timestamp;
+	char buff[RAND_BYTES];
+	struct utsname uname_out;
+	if(!RAND_bytes(buff, RAND_BYTES)) return NULL;
+	if(uname(&uname_out)!=0) return NULL;
+	timestamp=malloc((RAND_BYTES*2) + 3 + strlen(uname_out.nodename)+1);
+	timestamp[0]='<';
+	hex_from_binary(timestamp+1, buff, RAND_BYTES);
+	sprintf(timestamp+(RAND_BYTES*2)+1, "@%s>", uname_out.nodename);
+	return timestamp;
+}
+
+#else
+
 char const *_default_auth_timestamp() {
 	return NULL;
 }
+
+#endif
 
 char const *_default_auth_password(char const *username) {
 	return NULL;

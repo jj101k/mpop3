@@ -16,6 +16,8 @@ int _send_misc(FILE *ofp, char *prefix, char *message, char *extended_code);
 #define _send_ERR(ofp, message, extended_error) _send_misc(ofp, POP3_FAILURE, message, extended_error)
 #define _send_OK(ofp, message) _send_misc(ofp, POP3_SUCCESS, message, NULL)
 
+#define DEFAULT_PORT htons(110)
+
 // POP3 extended error codes follow.
 #define P3EXT_LOGIN_DELAY "LOGIN-DELAY"
 #define P3EXT_IN_USE "IN-USE"
