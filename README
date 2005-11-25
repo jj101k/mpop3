@@ -1,0 +1,2 @@
+= Can handle NULLs (^v000) in mail spools
+= Can handle varied line endings in a mail spool (\n or \r\n - fgets()/fgetln() unfortunately won't break on \r alone)
