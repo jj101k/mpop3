@@ -2,6 +2,9 @@
 #include <string.h>
 #include "pop3.h"
 
+#include "conffile.h"
+struct simpleConfig *config_hookup() {return NULL;}
+
 #define MAX_PASSWORD_LINE_LEN 1024
 
 #define PASSWORD_FILE "sample.password"

@@ -2,6 +2,7 @@
 #include <dlfcn.h>
 #include "auth_default.h"
 #include "storage_default.h"
+#include "conffile.h"
 
 char const *(*_auth_attempt_login)(char const *, char const *);
 char const *(*_auth_timestamp)();
@@ -21,6 +22,12 @@ int auth_hookup(void *dlhandle) {
 	LOAD_MISC_FUNC(_auth_login_delay_needed, "_auth_login_delay_needed");
 	LOAD_MISC_FUNC(_auth_default_login_delay, "_auth_default_login_delay");
 	LOAD_MISC_FUNC(_auth_need_root, "_auth_need_root");
+	struct simpleConfig *(*config_hookup)() = dlsym(dlhandle, "config_hookup");
+	if(config_hookup) {
+		current_tags=config_hookup();
+	} else {
+		current_tags=NULL;
+	}
 	return 1;
 }
 
@@ -52,5 +59,11 @@ int storage_hookup(void *dlhandle) {
 	LOAD_MISC_FUNC(_storage_synch, "_storage_synch");
 	LOAD_MISC_FUNC(_storage_dump_fragment, "_storage_dump_fragment");
 	LOAD_MISC_FUNC(_storage_need_user, "_storage_need_user");
+	struct simpleConfig *(*config_hookup)() = dlsym(dlhandle, "config_hookup");
+	if(config_hookup) {
+		current_tags=config_hookup();
+	} else {
+		current_tags=NULL;
+	}
 	return 1;
 }

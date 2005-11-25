@@ -3,60 +3,62 @@ MPOP3 - a modular POP3 server
 
 This program is a modular POP3 implementation, meaning that it supports different authentication/storage modules loadable at runtime. At the moment, I only have three, and the default config file (mpop3.conf) loads two of them by default: auth_file and storage_mbox.
 
-PRIVILEGE DROPPING
-
-If you see fit to start the program as root, it will switch users:
-- If _storage_need_user() returns other than wuAny, after auth/lock, switch to the "safe" user (wuDefault) or the user with the same name as the mailbox (wuMailbox)
-- If _auth_need_root() is set, after auth/lock, switch to the "safe" user
-- If not running in stdin (-s) mode [ie, if binding a TCP port], after bind(), switch to the "safe" user
-- Otherwise, switch to the "safe" user immediately. 
 
 AUTH MODULES
-
-The auth modules handle username/password lookups and also username->mailboxname mappings. Please read auth_functions.h if you want to write an auth module.
 
 auth_file
 ---------
 
 This is a simple authentication handler for reading usernames/passwords straight from a file. It's pretty much as minimal as it can get, replacing only the _auth_password() function, and it should be good for customising if you're going to be using APOP (plain-text passwords server-side).
 
+config options: none
+
 auth_getpw
 ----------
 
 This is a simple auth handler for using UNIX system passwords, replacing only _auth_attempt_login and _auth_timestamp (NULL). APOP won't work with it.
 
-STORAGE MODULES
+config options: none
 
-Handles reading/deleting messages. Please read storage_functions.h if you want to write a storage module.
+
+STORAGE MODULES
 
 storage_mbox
 ------------
 
-This is a fully-functional 'mbox'-format storage handler, so if that's what you're after, relax. There's not much you'll need to change here. Probably the only line you'll want to change is '#define MBOX_ROOT'.
+This is a fully-functional 'mbox'-format storage handler, so if that's what you're after, relax.
 
-MODULE BACKEND
+config options: storage_dir [sets the directory in which the spools are to be found]
 
-The modules are dlopen()ed in and then their functions are copied (effectively) into the existing symbol table. You can provide multiple modules of the same basic class, with the first module to declare a function getting its version used. Anything that's not defined by any module will use the equivalent default function, most of which do nothing, but some of which are useful (see the relevant header files).
 
-WRITING YOUR OWN MODULES
+MODULES
 
-Pretty much the easiest thing to do is copy one of the existing modules and edit it, but I would also advise that when making it you'll want to do "make -I<wherever the build tree is>" to make sure you get the default .mk files included.
+For further information about the modules system, please consult README.modules
 
 CONFIG FILE
 
 auth_module <filename>
+<auth module config options>
 storage_module <filename>
+<storage module config options>
 
 NOTES
 
 = Can handle NULLs (^v000) in mail spools
 = Can handle varied line endings in a mail spool (\n or \r\n... but fgets()/fgetln() unfortunately won't break on \r alone)
+= Can do APOP where appropriate
+= Supports extended POP3 response codes
+= Supports CAPA
+= Supports UIDL where appropriate
 
 BUILDING
 
-./configure --with-openssl
-make
-make install
+	./configure
+	make all test
+	make install
+
+If you see fit to start the program as root, it will drop privileges at the earliest practical opportunity. To make this work, you may need
+to use the --with-safe-user argument to configure. Run "./configure --help" for details.
 
 WHINING
 

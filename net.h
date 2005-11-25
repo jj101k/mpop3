@@ -13,5 +13,5 @@ struct child_process {
 #define MAX_CHILDREN SOMAXCONN
 #define MAX_SOCKETS 10
 
-int net_server_start(bool);
+int net_server_start(bool, bool);
 #endif

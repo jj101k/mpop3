@@ -3,6 +3,8 @@ To do:
 * Fix all the FIXMEs
 * Add docs
 * Make some of the module options configurable
+* Add some kind of example auth_*sql module
+* Add pidfile support
 
 Not happening very soon:
 

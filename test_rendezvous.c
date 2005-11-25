@@ -1,5 +1,6 @@
 #include <dns_sd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 void handle_resolve_reply( DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *fullname, const char *hosttarget, uint16_t port, uint16_t txtLen, const char *txtRecord, void *context ) {
 	printf("Service %s resolves to %s:%i\n", fullname, hosttarget, port);

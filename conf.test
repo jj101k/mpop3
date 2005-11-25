@@ -1,3 +1,4 @@
 # Don't mix multiple auth modules or multiple storage modules unless you're sure what will happen.
 auth_module auth_file/auth_file$SHARED_EXT
 storage_module storage_mbox/storage_mbox$SHARED_EXT
+storage_dir spools

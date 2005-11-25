@@ -44,3 +44,10 @@
 - Don't accept root as a safe user
 - Use openssl by default where available
 - Removed useless config.h.in
+- Added test target
+
+014:
+- Added module config support
+- Added config option 'storage_dir' to storage_mbox, making testing rather easier.
+- Improved testing system by protecting the test spool
+- Added -D (detach) option, but needs pidfile support before it's useful.

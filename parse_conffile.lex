@@ -6,6 +6,9 @@
 #include <string.h>
 #include <syslog.h>
 #include "modules.h"
+#include "conffile.h"
+
+struct simpleConfig *current_tags=NULL;
 %}
 
 PATH [[:alnum:]\._/][[:alnum:]_\.\-/]*
@@ -34,6 +37,27 @@ PATH [[:alnum:]\._/][[:alnum:]_\.\-/]*
 [\r\t\n]+
 
 #.*
+
+.+ {
+	struct simpleConfig *sc_cursor;
+	char found_tag=0;
+	size_t tag_length;
+	for(sc_cursor=current_tags;sc_cursor && sc_cursor->tag; sc_cursor++) {
+		tag_length=strlen(sc_cursor->tag);
+		if((!strncmp(yytext, sc_cursor->tag, tag_length)) && yytext[tag_length]==' ') {
+			// Match
+			found_tag=1;
+			char rv=(sc_cursor->function)(yytext+tag_length+1);
+			if(!rv) {
+				syslog(LOG_WARNING, "Module config '%s' failed", sc_cursor->tag);
+			}
+			break;
+		}
+	}
+	if(!found_tag) {
+		syslog(LOG_WARNING, "Unknown config line '%s'", yytext);
+	}
+}
 
 %%
 

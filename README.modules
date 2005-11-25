@@ -1,0 +1,69 @@
+MODULES
+=======
+
+PRIVILEGE DROPPING
+
+If you see fit to start the program as root, it will switch users:
+- If _storage_need_user() returns other than wuAny, after auth/lock, switch to the "safe" user (wuDefault) or the user with the same name as the mailbox (wuMailbox)
+- If _auth_need_root() is set, after auth/lock, switch to the "safe" user
+- If not running in stdin (-s) mode [ie, if binding a TCP port], after bind(), switch to the "safe" user
+- Otherwise, switch to the "safe" user immediately. 
+
+AUTH MODULES
+
+The auth modules handle username/password lookups and also username->mailboxname mappings. Please read auth_functions.h if you want to write an auth module.
+
+STORAGE MODULES
+
+Handles reading/deleting messages. Please read storage_functions.h if you want to write a storage module.
+
+MODULE BACKEND
+
+Module loading happens as follows:
+- The module is dlopen()ed in
+- Its functions are copied (effectively) into the existing symbol table.
+- If there's a function "struct simpleConfig *config_hookup()", then it gets called; see CONFIGURATION below
+
+You can provide multiple modules of the same basic class, with the first module to declare a function getting its version used. Anything that's not defined by any module will use the equivalent default function, most of which do nothing, but some of which are useful (see the relevant header files).
+
+WRITING YOUR OWN MODULES
+
+Pretty much the easiest thing to do is copy one of the existing modules and edit it, but I would also advise that when making it you'll want to do "make -I<wherever the build tree is>" to make sure you get the default .mk files included.
+
+CONFIGURATION
+
+auth_module <filename>
+<auth module config options>
+storage_module <filename>
+<storage module config options>
+
+After your module is loaded in the configuration file, you can intercept any (unhandled by default) configuration lines yourself.
+It's simplest to show this with an example, from the 'storage_mbox' module:
+
+#include "conffile.h"
+char set_storage_dir(char *directory) {
+  if(!directory || !directory[0]) return 0;
+  strncpy(storage_dir, directory, MAX_STORAGE_DIR_LEN-1);
+  storage_dir[MAX_STORAGE_DIR_LEN-1]=0;
+  return 1;
+}
+
+struct simpleConfig my_config_tags[]={
+  {&set_storage_dir, "storage_dir"},
+  {NULL, NULL}
+};
+
+struct simpleConfig *config_hookup () {
+  return my_config_tags;
+}
+
+This sets up the config parser to call set_storage_dir("whatever") whenever it sees "storage_dir whatever" in the config file.
+
+Note that once the next module (if any) is loaded, no further configuration data will be passed to your module.
+
+COPYING
+
+All the files that make up this distribution are copyright 2005 Jim Driscoll.
+All rights reserved.
+
+Please see the file 'COPYING' for further details.

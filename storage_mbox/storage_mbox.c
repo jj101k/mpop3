@@ -7,8 +7,33 @@
 #include <stdarg.h>
 #include "pop3.h"
 #include "storage.h"
+#include "conffile.h"
 
+#define MAX_STORAGE_DIR_LEN 1024
 #define MBOX_ROOT "/var/mail"
+
+char storage_dir[MAX_STORAGE_DIR_LEN];
+
+char set_storage_dir(char const *directory) {
+	if(!directory || !directory[0]) return 0;
+	strncpy(storage_dir, directory, MAX_STORAGE_DIR_LEN-1);
+	storage_dir[MAX_STORAGE_DIR_LEN-1]=0;
+	return 1;
+}
+
+struct simpleConfig my_config_tags[]={
+	{&set_storage_dir, "storage_dir"},
+	{NULL, NULL}
+};
+
+void _init() {
+	set_storage_dir(MBOX_ROOT);
+}
+
+struct simpleConfig *config_hookup () {
+	return my_config_tags;
+}
+
 
 int spoolfd;
 FILE *spoolfp;
@@ -168,8 +193,8 @@ int _storage_lock_mailbox(char const *mailboxname) {
 		return 0;
 	}
 	
-	if(chdir(MBOX_ROOT)!=0) {
-		syslog(LOG_ERR, "Can't enter mailbox root '%s'", MBOX_ROOT);
+	if(chdir(storage_dir)!=0) {
+		syslog(LOG_ERR, "Can't enter mailbox root '%s'", storage_dir);
 		return 0;
 	}
 	if(!mailboxname || !mailboxname[0]) {

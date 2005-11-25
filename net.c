@@ -105,7 +105,7 @@ int accept_loop(int l_socket, int sockaddr_len) {
 #include <syslog.h>
 #include <stdarg.h>
 
-int net_server_start(bool su_after_bind) {
+int net_server_start(bool su_after_bind, bool detach_after_bind) {
 	struct addrinfo addrhints, *first_addrinfo_result, *ai_res_p;
 	int rv;
 	int sockets_in_use=0;
@@ -178,13 +178,18 @@ int net_server_start(bool su_after_bind) {
 		} else if(!childpid) {
 			// Child
 			if(su_after_bind) drop_privs();
+			if(detach_after_bind) {
+				close(0);
+				close(1);
+				close(2);
+			}
 			accept_loop(current_socket, ai_res_p->ai_addrlen);
 			exit(0);
 		} else {
 			// Parent
 			nhpidlist[sockets_in_use]=childpid;
 #if USE_RENDEZVOUS
-			if(getsockname(current_socket, ai_res_p->ai_addr, &(ai_res_p->ai_addrlen))!=0) {
+			if(getsockname(current_socket, ai_res_p->ai_addr, (int *) &(ai_res_p->ai_addrlen) )!=0) {
 				// nothing
 			} else if(ai_res_p->ai_family==PF_INET) {
 				using_port=((struct sockaddr_in *)(ai_res_p->ai_addr))->sin_port;
@@ -205,6 +210,11 @@ int net_server_start(bool su_after_bind) {
 	}
 	freeaddrinfo(first_addrinfo_result);
 	if (sockets_in_use == 0) return 0;
+	if(detach_after_bind) {
+		close(0);
+		close(1);
+		close(2);
+	}
 	int i;
 	for(i=0;i<sockets_in_use;i++) {
 		wait(NULL);
