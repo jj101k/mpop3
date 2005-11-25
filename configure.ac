@@ -4,9 +4,16 @@ AC_ARG_WITH(openssl,
 	[
 		if test "x$withval" != "xno" ; then
 			AC_DEFINE(USE_OPENSSL,1)
+			WITH_OPENSSL=1
 		fi
 	]
 )
-AC_CHECK_LIB('crypto','EVP_DigestInit', [], [AC_DEFINE(USE_OPENSSL,0)])
+AC_CHECK_LIB(crypto,EVP_DigestInit, [
+	if test "x$WITH_OPENSSL" == "x1" ; then
+		LIBS="$LIBS -lcrypto"
+	fi
+], [AC_DEFINE(USE_OPENSSL,0)])
+AC_PROG_LEX
+AC_PROG_CC
 AC_CONFIG_FILES([Makefile defaults.mk module.mk])
 AC_OUTPUT

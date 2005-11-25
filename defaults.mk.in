@@ -1,3 +1,4 @@
 SHARED_EXT=.bundle
 LIBS=@LIBS@
 DEFINES=@DEFS@
+CC=@CC@ -Wall

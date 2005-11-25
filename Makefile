@@ -4,7 +4,7 @@ OBJECTS=main.o storage_default.o pop_commands.o pop3.o util.o modules.o auth_def
 ALSO_CLEAN=.gdb_history parse_conffile.c
 SUBDIRS=auth_file storage_mbox
 
-.PHONY: all clean
+.PHONY: all clean distclean
 .SUFFIXES: .lex
 
 all: $(TARGET) $(TARGET).conf
@@ -16,6 +16,9 @@ $(TARGET): $(OBJECTS)
 clean:
 	rm -f $(OBJECTS) $(TARGET) $(ALSO_CLEAN)
 	for dir in $(SUBDIRS); do $(MAKE) -I .. -C $$dir clean; done
+
+distclean: clean
+	rm -rf config.* autom4te.cache
 
 .lex.c:
 	$(LEX) -o$@ $<
