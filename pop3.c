@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
+#include <unistd.h>
 
 #include "auth_functions.h"
 #include "pop_commands.h"
@@ -49,6 +51,12 @@ int grep_equal(char *input, char *compare[]) {
 	return 0;
 }
 
+FILE *sigalarm_out;
+
+void handle_sigalarm(int signum) {
+	_send_ERR(sigalarm_out, E_TIMEOUT, NULL);
+	exit(0);
+}
 
 enum pop3_state command_loop(FILE *ifp, FILE *ofp, enum pop3_state current_state) {
 	char command_line[RFC_MAX_INPUT_LENGTH];
@@ -60,8 +68,17 @@ enum pop3_state command_loop(FILE *ifp, FILE *ofp, enum pop3_state current_state
 	struct pop3_command_rv pop3_command_rv;
 	static struct pop3_command_rv previous_pop3_command_rv={1,0,NULL};
 
-	// FIXME timeouts
-	if(!fgets(command_line, RFC_MAX_INPUT_LENGTH, ifp)) return p3Dead;
+	{
+		sigalarm_out=ofp;
+		sig_t old_sigalarm_handler=signal(SIGALRM, handle_sigalarm);
+		alarm(DEFAULT_TIMEOUT);
+
+		if(!fgets(command_line, RFC_MAX_INPUT_LENGTH, ifp)) return p3Dead;
+
+		alarm(0);
+		signal(SIGALRM, old_sigalarm_handler);
+	}
+
 	cursor=command_line;
 	super_chomp(command_line);
 

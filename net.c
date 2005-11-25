@@ -102,6 +102,9 @@ int accept_loop(int l_socket, int sockaddr_len) {
 
 #include <errno.h>
 
+#include <syslog.h>
+#include <stdarg.h>
+
 int net_server_start() {
 	struct addrinfo addrhints, *first_addrinfo_result, *ai_res_p;
 	int rv;
@@ -166,7 +169,8 @@ int net_server_start() {
 		pid_t childpid=fork();
 		if(childpid==-1) {
 			close(current_socket);
-			break; // FIXME log here too... and kill?
+			syslog(LOG_ERR, "Fork() failed");
+			break;
 		} else if(!childpid) {
 			// Child
 			accept_loop(current_socket, ai_res_p->ai_addrlen);

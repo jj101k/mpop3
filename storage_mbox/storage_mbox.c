@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>
+#include <syslog.h>
+#include <stdarg.h>
 #include "pop3.h"
 #include "storage.h"
 
@@ -164,15 +166,15 @@ int _storage_lock_mailbox(char const *mailboxname) {
 	}
 	
 	if(chdir(MBOX_ROOT)!=0) {
-		// ! FIXME !
+		syslog(LOG_ERR, "Can't enter mailbox root '%s'", MBOX_ROOT);
 		return 0;
 	}
 	if(!mailboxname || !mailboxname[0]) {
-		// ! FIXME !
+		syslog(LOG_WARNING, "Bad mailboxname: '%s'", mailboxname);
 		return 0;
 	}
 	if(regexec(&preg, mailboxname, 0, NULL, 0)!=0) {
-		// ! FIXME !
+		syslog(LOG_WARNING, "Bad mailboxname format: '%s'", mailboxname);
 		return 0;
 	}
 	regfree(&preg);

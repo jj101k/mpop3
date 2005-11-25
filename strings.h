@@ -9,6 +9,7 @@
 #define E_BAD_ARGUMENTS "wrong number of arguments supplied"
 #define E_DELAY "you've logged in too recently. Please try again later."
 #define E_PROTOCOL_ERROR "protocol error: you're not speaking valid POP3"
+#define E_TIMEOUT "you've been idle too long. Disconnecting."
 
 // According to RFC2449, this must be 'printable ASCII, excluding "<"'
 #define S_SERVER_ID "POP3 server ready"
@@ -22,4 +23,4 @@
 #define S_QUIT "bye bye"
 #define S_CAPA_RESPONSE "capability list follows"
 
-#define S_SERVER_IMPLEMENTATION "mpop3 version 1.0"
+#define S_SERVER_IMPLEMENTATION PACKAGE_NAME " version " PACKAGE_VERSION

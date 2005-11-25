@@ -30,6 +30,9 @@ int _send_misc(FILE *ofp, char *prefix, char *message, char *extended_code);
 #define RFC_MAX_INPUT_LENGTH 255
 #define RFC_MIN_ARG_LENGTH 1
 
+
+#define DEFAULT_TIMEOUT RFC_MIN_INACTIVITY_TIMER+0
+
 /*
  * Utility functions
  * =================

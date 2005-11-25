@@ -1,4 +1,4 @@
-AC_INIT(mpop3, 1.0)
+AC_INIT(mpop3, 0.10)
 AC_ARG_WITH(openssl,
 	[	--with-openssl	Use openssl md5/rand functions],
 	[

@@ -2,7 +2,7 @@ include defaults.mk
 TARGET=mpop3
 OBJECTS=main.o storage_default.o pop_commands.o pop3.o util.o modules.o auth_default.o parse_conffile.o net.o
 ALSO_CLEAN=.gdb_history parse_conffile.c rendezvous_test_prog
-SUBDIRS=auth_file storage_mbox
+SUBDIRS=auth_file storage_mbox auth_getpw
 
 .PHONY: all clean
 .SUFFIXES: .lex

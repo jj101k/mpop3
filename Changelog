@@ -12,3 +12,9 @@
 - Rendezvous support definitely works
 - Added testrendezvous make target
 - Added --with-rendezvous configure option
+
+010:
+- Added the module auth_getpw, which seems to work
+- Added timeout support
+- Added syslog support
+- This is the 0.10 release.
