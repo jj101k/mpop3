@@ -2,7 +2,6 @@ include defaults.mk
 TARGET=$(MODULENAME)$(SHARED_EXT)
 OBJECTS=$(MODULENAME).o
 OTHER_OBJECTS=../util.o
-CC=$(CC) -I..
 BUILD=gcc -bundle
 #BUILD=libtool -dynamic
 
@@ -17,4 +16,4 @@ clean:
 	rm -f $(OBJECTS) $(TARGET) $(ALSO_CLEAN)
 
 .c.o:
-	$(CC) $(DEFINES) -c $<
+	$(CC) -I.. $(DEFINES) -c $<

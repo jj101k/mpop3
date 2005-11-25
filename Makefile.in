@@ -17,6 +17,9 @@ clean:
 	rm -f $(OBJECTS) $(TARGET) $(ALSO_CLEAN)
 	for dir in $(SUBDIRS); do $(MAKE) -I .. -C $$dir clean; done
 
+distclean: clean
+	rm -rf config.* autom4te.cache
+
 .lex.c:
 	$(LEX) -o$@ $<
 
