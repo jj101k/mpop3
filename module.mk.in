@@ -3,8 +3,6 @@ TARGET=$(MODULENAME)$(SHARED_EXT)
 OBJECTS=$(MODULENAME).o
 OTHER_OBJECTS=../util.o
 CC=gcc -Wall -g -I..
-LIBS=-lcrypto
-DEFINES=-DUSE_OPENSSL=1
 BUILD=gcc -bundle
 #BUILD=libtool -dynamic
 
