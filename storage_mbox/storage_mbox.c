@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>
-#include "storage.h"
 #include "pop3.h"
+#include "storage.h"
 
 #define MBOX_ROOT "spools"
 

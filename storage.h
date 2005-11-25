@@ -18,20 +18,4 @@ struct pop3_message {
 	char deleted;
 };
 
-/*
- * int _storage_lock_mailbox(char const *)
- *
- * Opens and locks the mailbox. Returns 1 if successful, 0 (locked?) otherwise.
- */
-int _storage_lock_mailbox(char const *mailbox);
-unsigned long int _storage_message_count();
-unsigned long int _storage_message_sum();
-struct pop3_message *_storage_first_message();
-struct pop3_message *_storage_message_number(unsigned long int);
-int _storage_uidl_supported();
-int _storage_dump_message(struct pop3_message *, FILE *);
-int _storage_dump_message_lines(struct pop3_message *, unsigned long int, FILE *);
-int _storage_dump_headers(struct pop3_message *, FILE *);
-int _storage_synch();
-
 #endif

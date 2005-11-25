@@ -62,5 +62,3 @@ char const *_auth_attempt_login(char const *username, char const *password) {
 char const *_auth_login(char const *username) {
 	return username;
 }
-int _auth_login_delay_needed(char const *username) {return 0;} // FIXME
-int _auth_default_login_delay() {return 0;}; // FIXME

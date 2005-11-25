@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "pop3.h"
 
-#include "storage.h"
+#include "storage_functions.h"
 
 struct pop3_command_rv {
 	int successful;

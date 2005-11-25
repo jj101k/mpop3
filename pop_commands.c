@@ -2,7 +2,7 @@
 #include "pop_commands.h"
 #include "strings.h"
 #include "pop3.h"
-#include "auth.h"
+#include "auth_functions.h"
 
 #define ABSOLUTE_MAX_USERNAME_LENGTH 1024
 

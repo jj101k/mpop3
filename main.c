@@ -11,6 +11,8 @@
 #include <arpa/inet.h>
 
 #include "pop3.h"
+#include "modules.h"
+#include "parse_conffile.h"
 
 #define DEFAULT_PORT htons(1110)
 
@@ -176,7 +178,14 @@ int tcp_server() {
 	return 0;
 }
 
+#include <dlfcn.h>
 int main(int argc, char *argv[]) {
+	parse_conffile("mpop3.conf");
+	void *dlhandle=NULL;
+	//void *dlhandle= dlopen("auth_file/auth_file.bundle", RTLD_NOW|RTLD_LOCAL)/*NULL*/;
+	auth_hookup(dlhandle);
+	//dlhandle= dlopen("storage_mbox/storage_mbox.bundle", RTLD_NOW|RTLD_LOCAL)/*NULL*/;
+	storage_hookup(dlhandle);
 	if(argc>1 && !strcmp(argv[1],"-s")) {
 		handle_connection(stdin, stdout);
 		return 0;
