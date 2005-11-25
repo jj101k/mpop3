@@ -14,16 +14,12 @@
 
 /*
 
-FIXME
-
 If rendezvous (aka zeroconf) support exists:
 
-[not done] bind to a wild port if 110 isn't possible
-[done] register foo._pop3._tcp.local IN SRV <self address>:<port>
+bind to a wild port if 110 isn't possible
+register in multicast DNS "<hostname>._pop3._tcp.local IN SRV <self address>:<port>"
 
 */
-
-#define USE_RENDEZVOUS 1
 
 struct child_process dummy_process={NULL, 0, psAlive}, *last_process;
 
@@ -169,7 +165,8 @@ int net_server_start() {
 
 		pid_t childpid=fork();
 		if(childpid==-1) {
-			return 0; // FIXME
+			close(current_socket);
+			break; // FIXME log here too... and kill?
 		} else if(!childpid) {
 			// Child
 			accept_loop(current_socket, ai_res_p->ai_addrlen);
