@@ -1,2 +1,10 @@
 configure
 autom4te.cache
+Makefile
+config.log
+config.status
+defaults.mk
+module.mk
+*.conf
+spools/test
+mpop3
