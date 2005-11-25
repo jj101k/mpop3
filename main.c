@@ -29,7 +29,10 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	openlog(PACKAGE_NAME, LOG_PERROR|LOG_PID, LOG_MAIL);
-	parse_conffile(config_filename);
+	if(!parse_conffile(config_filename)) {
+		syslog(LOG_ERR, "Couldn't open config file '%s'", config_filename);
+		return 1;
+	}
 	auth_hookup(NULL);
 	storage_hookup(NULL);
 	if(stdin_mode) {

@@ -1,1 +1,1 @@
-int parse_conffile(char *);
+char parse_conffile(char *);

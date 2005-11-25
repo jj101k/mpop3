@@ -12,7 +12,6 @@
 // more practically, this/2 would be okay.
 #define MAX_POP3_ARG_COUNT RFC_MAX_INPUT_LENGTH
 
-#include "config.h"
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdio.h>

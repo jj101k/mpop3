@@ -3,12 +3,10 @@ To do:
 * Fix all the FIXMEs
 * Add docs
 * Make some of the module options configurable
-* Add test for safe user
 
 Not happening very soon:
 
 * Use automake?
-* Write better autoconf stuff?
 * make auth_getpw work on Mac OS X with encrypted users (if possible)
 
 Probably never happen:

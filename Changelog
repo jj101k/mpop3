@@ -34,3 +34,13 @@
 - Added 'install' target
 - Switched to auth_getpw instead of auth_file in default config
 - Removed '-C' from make command line (BSD compat)
+
+013:
+- Always create destination dirs
+- Corrected path in config file
+- No config file is now a fatal error
+- Can't access modules is now a warning
+- No such (safe) user is a fatal error
+- Don't accept root as a safe user
+- Use openssl by default where available
+- Removed useless config.h.in
