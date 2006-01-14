@@ -33,10 +33,12 @@ $(TARGET).conf: conf.sample
 rendezvous_test_prog:
 	$(CC) -o rendezvous_test_prog test_rendezvous.c
 
-testrendezvous: all rendezvous_test_prog
+test-rendezvous: all rendezvous_test_prog test-$(TARGET).conf
+	./mpop3 -f test-$(TARGET).conf &
 	./rendezvous_test_prog
+	kill `cat test.pid`
 
-testbonjour: testrendezvous
+test-bonjour: test-rendezvous
 
 install: all
 	$(INSTALL) -d $(sbindir)

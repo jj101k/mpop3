@@ -1,4 +1,11 @@
 current:
+017:
+- Added basic (in-config) pidfile support
+- OpenBSD compatibility fix
+- Make the rendezvous test have a better name
+- Make rendezvous test easier
+- Documented rendezvous support in a separate README
+
 016:
 - Rewrote function macros
 - Re-ordered changelog!

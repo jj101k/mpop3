@@ -1,4 +1,4 @@
-AC_INIT(mpop3, 0.16)
+AC_INIT(mpop3, 0.17)
 AC_ARG_WITH(safe-user,
 	AC_HELP_STRING([--with-safe-user=ARG], [SU to this user if you're root [[ARG=mail]]]),
 	[

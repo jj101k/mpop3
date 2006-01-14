@@ -21,6 +21,11 @@ PATH [[:alnum:]\._/][[:alnum:]_\.\-/]*
 
 %%
 
+^"pidfile"[[:space:]]+{PATH}$ {
+	char const *pidfile_path=skip_spaces(yytext+strlen("pidfile"));
+	set_pidfile(pidfile_path);
+}
+
 ^"auth_module"[[:space:]]+{PATH}$ {
 	char const *module_path=skip_spaces(yytext+strlen("auth_module"));
 	void *dlhandle=dlopen(module_path, RTLD_NOW|RTLD_LOCAL);
