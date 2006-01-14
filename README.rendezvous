@@ -1,0 +1,5 @@
+To use this, make sure to:
+./configure --with-rendezvous
+
+...and you may also want to test it by:
+make test-rendezvous
