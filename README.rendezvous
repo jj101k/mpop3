@@ -3,3 +3,5 @@ To use this, make sure to:
 
 ...and you may also want to test it by:
 make test-rendezvous
+
+This allows your POP3 server to start on a random port and advertise it over "rendezvous".
