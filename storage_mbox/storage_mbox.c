@@ -51,6 +51,8 @@ enum whichUser _storage_need_user() {return wuMailbox;}
 #endif
 
 #define LOCK_FLOCK 1
+// NOTE! LOCK_FLOCK must be turned off on Linux
+//#define LOCK_MODE 0
 #define LOCK_MODE LOCK_FLOCK
 
 int _storage_uidl_supported() {return USE_OPENSSL;}
