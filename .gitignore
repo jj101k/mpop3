@@ -10,3 +10,4 @@ spools/test
 mpop3
 *.o
 *.bundle
+*~
