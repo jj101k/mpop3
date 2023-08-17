@@ -67,13 +67,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[
 	AC_SUBST(MAKE_SHARED,"\$(LD) -shared")
 ])
 CFLAGS=$OLD_CFLAGS
-#AC_CHECK_FILE(/usr/lib/libc.dylib, [
-	#AC_SUBST(SHARED_EXT,".bundle")
-	#AC_SUBST(MAKE_SHARED,"-bundle")
-#], [
-	#AC_SUBST(SHARED_EXT,".so")
-	#AC_SUBST(MAKE_SHARED,"-shared")
-#])
+
 extra_modules=""
 AC_CHECK_HEADERS([dns_sd.h], [], [AC_DEFINE(USE_RENDEZVOUS,0)])
 AC_CHECK_HEADERS([libpq-fe.h], [extra_modules="$extra_modules auth_postgresql"], [])
