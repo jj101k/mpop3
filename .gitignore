@@ -8,3 +8,5 @@ module.mk
 *.conf
 spools/test
 mpop3
+*.o
+*.bundle
