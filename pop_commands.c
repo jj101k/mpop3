@@ -8,7 +8,7 @@
 #define ABSOLUTE_MAX_USERNAME_LENGTH 1024
 
 
-#ifdef USE_OPENSSL
+#if USE_OPENSSL
 #include <openssl/evp.h>
 #endif
 
@@ -77,7 +77,7 @@ struct pop3_command_rv pop3_rv_message_deleted={1, 0, S_MESSAGE_DELETED, NULL};
 struct pop3_command_rv pop3_DELE(int argc, char *argv[], enum pop3_state *unused2, FILE *ifp, FILE *ofp) {
 	struct pop3_message *current_message;
 	unsigned long int index;
-	
+
 	index=strtoull(argv[1], NULL, 10);
 	current_message=valid_message(index);
 	if(!current_message) {
@@ -98,7 +98,7 @@ struct pop3_command_rv pop3_DELE(int argc, char *argv[], enum pop3_state *unused
 struct pop3_command_rv pop3_RETR(int argc, char *argv[], enum pop3_state *unused2, FILE *ifp, FILE *ofp) {
 	struct pop3_message *current_message;
 	unsigned long int index;
-	
+
 	index=strtoull(argv[1], NULL, 10);
 	current_message=valid_message(index);
 	if(!current_message) {
@@ -108,7 +108,7 @@ struct pop3_command_rv pop3_RETR(int argc, char *argv[], enum pop3_state *unused
 	_send_OK(ofp, S_MESSAGE_FOLLOWS);
 	_storage_dump_message(current_message, ofp);
 	_pop3_fprintf(ofp, ".\r\n");
-	
+
 	return pop3_rv_quiet_success;
 }
 
@@ -123,7 +123,7 @@ struct pop3_command_rv pop3_TOP(int argc, char *argv[], enum pop3_state *unused2
 	struct pop3_message *current_message;
 	unsigned long int index;
 	unsigned long int max_lines;
-	
+
 	index=strtoull(argv[1], NULL, 10);
 	current_message=valid_message(index);
 	if(!current_message) {
@@ -136,7 +136,7 @@ struct pop3_command_rv pop3_TOP(int argc, char *argv[], enum pop3_state *unused2
 	_storage_dump_headers(current_message, ofp);
 	_storage_dump_message_lines(current_message, max_lines, ofp);
 	_pop3_fprintf(ofp, ".\r\n");
-	
+
 	return pop3_rv_quiet_success;
 }
 
@@ -218,7 +218,7 @@ struct pop3_command_rv pop3_USERPASS(int argc, char *argv[], enum pop3_state *cu
  * Only works if OpenSSL is enabled.
  */
 struct pop3_command_rv pop3_APOP(int argc, char *argv[], enum pop3_state *current_state, FILE *ifp, FILE *ofp) {
-#ifdef USE_OPENSSL
+#if USE_OPENSSL
 	char const *timestamp=_auth_timestamp();
 	if(!timestamp) return pop3_rv_not_implemented;
 	char const *username=argv[1];
@@ -267,7 +267,7 @@ struct pop3_command_rv pop3_APOP(int argc, char *argv[], enum pop3_state *curren
 	}
 #else
 	return pop3_rv_not_implemented;
-#endif	
+#endif
 }
 
 /*
@@ -326,7 +326,7 @@ struct pop3_command_rv pop3_STAT(int argc, char *argv[], enum pop3_state *unused
 struct pop3_command_rv pop3_LIST(int argc, char *argv[], enum pop3_state *unused2, FILE *ifp, FILE *ofp) {
 	struct pop3_message *current_message=_storage_first_message();
 	long unsigned int i;
-	
+
 	if(argc==1) {
 		_send_OK(ofp, S_LIST_FOLLOWS);
 		if(_storage_array_style()==asArray) {
@@ -366,7 +366,7 @@ struct pop3_command_rv pop3_rv_reset={1, 0, S_RESET, NULL};
 struct pop3_command_rv pop3_RSET(int argc, char *argv[], enum pop3_state *unused2, FILE *ifp, FILE *ofp) {
 	struct pop3_message *current_message=_storage_first_message();
 	unsigned long int i;
-	
+
 	if(_storage_array_style()==asArray) {
 		unsigned long int message_count=_storage_message_count();
 		for(i=0;i<message_count;current_message++, i++) {
@@ -395,7 +395,7 @@ struct pop3_command_rv pop3_UIDL(int argc, char *argv[], enum pop3_state *unused
 	if(!_storage_uidl_supported()) {
 		return pop3_rv_not_implemented;
 	}
-	
+
 	if(argc==1) {
 		_send_OK(ofp, S_LIST_FOLLOWS);
 		if(_storage_array_style()==asArray) {

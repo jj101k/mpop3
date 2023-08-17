@@ -174,7 +174,7 @@ enum pop3_state command_loop(FILE *ifp, FILE *ofp, enum pop3_state current_state
 
 int handle_connection(FILE *ifp, FILE *ofp) {
 	enum pop3_state current_state=p3Authorisation;
-#ifdef USE_OPENSSL
+#if USE_OPENSSL
 	char const *ts=_auth_timestamp();
 	if(ts) {
 		_pop3_fprintf(ofp, POP3_SUCCESS " %s %s\r\n", S_SERVER_ID, ts);
